@@ -135,32 +135,44 @@ class TasksListBindingsTest {
 
     @Test
     fun setDueDateLabel_activeTaskDueInThreeDays_showsDMinus3() {
+        // GIVEN - an active task due in 3 days
         val textView = newTextView(View.GONE)
         val task = Task("Title", "Description", isCompleted = false, dueDate = today.plusDays(3))
+        // WHEN
         bind(textView, task)
+        // THEN
         assertShowsLabel("D-3", textView)
     }
 
     @Test
     fun setDueDateLabel_activeTaskOverdueByThreeDays_showsDPlus3() {
+        // GIVEN - an active task overdue by 3 days
         val textView = newTextView(View.GONE)
         val task = Task("Title", "Description", isCompleted = false, dueDate = today.minusDays(3))
+        // WHEN
         bind(textView, task)
+        // THEN
         assertShowsLabel("D+3", textView)
     }
 
     @Test
     fun setDueDateLabel_activeTaskWithNoDueDate_showsNoLabel() {
+        // GIVEN - an active task without a due date
         val textView = newTextView()
         val task = Task("Title", "Description", isCompleted = false, dueDate = null)
+        // WHEN
         bind(textView, task)
+        // THEN
         assertShowsNoLabel(textView)
     }
 
     @Test
     fun setDueDateLabel_nullTask_showsNoLabel() {
+        // GIVEN - a new TextView
         val textView = newTextView()
+        // WHEN - it is bound to no task
         bind(textView, null)
+        // THEN
         assertShowsNoLabel(textView)
     }
 
@@ -176,9 +188,12 @@ class TasksListBindingsTest {
 
     @Test
     fun setDueDateLabel_checkActiveTaskWithDueDateInList_replacesDDayWithClear() = runTest {
+        // GIVEN - one active task due in 2 days on the list screen, showing D-2
         launchListWith(Task("TITLE1", "DESCRIPTION1", false, "id1", dueDate = today.plusDays(2)))
         checkRowLabel(showsLabel("D-2"))
+        // WHEN - its checkbox is checked
         clickRowCheckbox()
+        // THEN - D-2 is replaced by CLEAR
         checkRowLabel(showsLabel("CLEAR"))
     }
 
@@ -186,29 +201,45 @@ class TasksListBindingsTest {
 
     @Test
     fun setDueDateLabel_activeTaskDueToday_showsDDay() {
+        // GIVEN - an active task due today
         val textView = newTextView(View.GONE)
-        bind(textView, Task("Title", "Description", isCompleted = false, dueDate = today))
+        val task = Task("Title", "Description", isCompleted = false, dueDate = today)
+        // WHEN
+        bind(textView, task)
+        // THEN
         assertShowsLabel("D-Day", textView)
     }
 
     @Test
     fun setDueDateLabel_activeTaskDueTomorrow_showsDMinus1() {
+        // GIVEN - an active task due tomorrow
         val textView = newTextView(View.GONE)
-        bind(textView, Task("Title", "Description", isCompleted = false, dueDate = today.plusDays(1)))
+        val task = Task("Title", "Description", isCompleted = false, dueDate = today.plusDays(1))
+        // WHEN
+        bind(textView, task)
+        // THEN
         assertShowsLabel("D-1", textView)
     }
 
     @Test
     fun setDueDateLabel_activeTaskDueYesterday_showsDPlus1() {
+        // GIVEN - an active task due yesterday
         val textView = newTextView(View.GONE)
-        bind(textView, Task("Title", "Description", isCompleted = false, dueDate = today.minusDays(1)))
+        val task = Task("Title", "Description", isCompleted = false, dueDate = today.minusDays(1))
+        // WHEN
+        bind(textView, task)
+        // THEN
         assertShowsLabel("D+1", textView)
     }
 
     @Test
     fun setDueDateLabel_completedTaskWithNoDueDate_showsClear() {
+        // GIVEN - a completed task without a due date
         val textView = newTextView(View.GONE)
-        bind(textView, Task("Title", "Description", isCompleted = true, dueDate = null))
+        val task = Task("Title", "Description", isCompleted = true, dueDate = null)
+        // WHEN
+        bind(textView, task)
+        // THEN
         assertShowsLabel("CLEAR", textView)
     }
 
@@ -228,48 +259,63 @@ class TasksListBindingsTest {
 
     @Test
     fun setDueDateLabel_recycledFromLabelToNullTask_showsNoLabel() {
+        // GIVEN - the view shows D-Day for an earlier task
         val textView = newTextView()
         bind(textView, Task("First", "Description", isCompleted = false, dueDate = today))
         assertShowsLabel("D-Day", textView)
+        // WHEN - it is rebound to no task
         bind(textView, null)
+        // THEN
         assertShowsNoLabel(textView)
     }
 
     @Test
     fun setDueDateLabel_recycledFromNoLabelToOverdueTask_showsDPlus1() {
+        // GIVEN - the view shows no label for an active task without a due date
         val textView = newTextView()
         bind(textView, Task("First", "Description", isCompleted = false, dueDate = null))
         assertShowsNoLabel(textView)
+        // WHEN - it is rebound to a task overdue by 1 day
         bind(textView, Task("Second", "Description", isCompleted = false, dueDate = today.minusDays(1)))
+        // THEN
         assertShowsLabel("D+1", textView)
     }
 
     @Test
     fun setDueDateLabel_recycledSameTaskCheckedOff_showsClear() {
+        // GIVEN - the view shows D-1 for an active task
         val textView = newTextView()
         val due = today.plusDays(1)
         bind(textView, Task("Title", "Description", isCompleted = false, id = "task1", dueDate = due))
         assertShowsLabel("D-1", textView)
+        // WHEN - it is rebound to the same task, now completed
         bind(textView, Task("Title", "Description", isCompleted = true, id = "task1", dueDate = due))
+        // THEN
         assertShowsLabel("CLEAR", textView)
     }
 
     @Test
     fun setDueDateLabel_recycledSameTaskWithDueDateUnchecked_showsDMinus1() {
+        // GIVEN - the view shows CLEAR for a completed task due tomorrow
         val textView = newTextView()
         val due = today.plusDays(1)
         bind(textView, Task("Title", "Description", isCompleted = true, id = "task1", dueDate = due))
         assertShowsLabel("CLEAR", textView)
+        // WHEN - it is rebound to the same task, now active again
         bind(textView, Task("Title", "Description", isCompleted = false, id = "task1", dueDate = due))
+        // THEN
         assertShowsLabel("D-1", textView)
     }
 
     @Test
     fun setDueDateLabel_recycledSameTaskWithNoDueDateUnchecked_showsNoLabel() {
+        // GIVEN - the view shows CLEAR for a completed task without a due date
         val textView = newTextView()
         bind(textView, Task("Title", "Description", isCompleted = true, id = "task1", dueDate = null))
         assertShowsLabel("CLEAR", textView)
+        // WHEN - it is rebound to the same task, now active again
         bind(textView, Task("Title", "Description", isCompleted = false, id = "task1", dueDate = null))
+        // THEN - CLEAR does not stay
         assertShowsNoLabel(textView)
     }
 

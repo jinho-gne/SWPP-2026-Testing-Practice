@@ -6,17 +6,13 @@
 
 ## `@BindingAdapter("app:dueDateLabel") fun setDueDateLabel(textView: TextView, task: Task?)`
 
-**Intent**: Show the D-day label of `task` for today's date in the row's due-date `TextView` (`due_date_text` in `task_item.xml`). When the task has a label, the view is visible and shows exactly that label. When there is no label (an active task without a due date, or no task), the user sees no label at all. The label must follow the task's current state: rows in the task list are recycled and rebound when the user checks or unchecks a task, so every call must fully replace what an earlier call left on the same view.
+**Intent**: Show the D-day label of `task` for today's date in the row's due-date `TextView` (`due_date_text` in `task_item.xml`). When the task has a label, the view is visible and shows exactly that label. When there is no label (an active task without a due date, or no task), the user sees no label at all. The label must follow the task's current state: rows in the task list are recycled and rebound when the user checks or unchecks a task, so every call must fully replace what an earlier call left on the same view. In the Tips below, "shows label X" means `textView.visibility` is `View.VISIBLE` and `textView.text.toString()` is exactly X, and "shows no label" means `textView.text.toString()` is "" or `textView.visibility` is not `View.VISIBLE` (emptying or hiding the view is an implementation choice; the user sees nothing either way).
 
 **Pre-conditions**
 - Called on the main thread with a real Android `TextView` (the test needs an Android `Context`, so it runs in `app/src/androidTest`).
 - `task` may be `null` (data binding passes `null` before the row's task is set).
 - "Today" is the device's current local date (`LocalDate.now()`); it cannot be injected. In every Tip below, `today` means `LocalDate.now()` read in the Given step, and due dates are built from it, for example `today.plusDays(1)`.
 - The label text itself follows `specs/DueDateUtils.spec.md`; this spec checks that the view shows that label, and only that label, for the task it is currently bound to.
-
-**Definitions used by the oracles below**
-- "shows label X": `textView.visibility` is `View.VISIBLE` and `textView.text.toString()` is exactly X.
-- "shows no label": `textView.text.toString()` is "" or `textView.visibility` is not `View.VISIBLE`. Whether the view is emptied or hidden is an implementation choice; the user sees nothing either way.
 
 **Post-conditions**
 - Success cases

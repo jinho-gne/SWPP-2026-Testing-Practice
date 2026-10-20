@@ -6,15 +6,13 @@
 
 ## `internal fun dueDateLabel(dueDate: LocalDate?, today: LocalDate, isCompleted: Boolean): String`
 
-**Intent**: Build the D-day label shown next to a task in the list. A completed task shows "CLEAR" whether or not it has a due date, an active task without a due date shows nothing, and an active task with a due date shows "D-N" when it is due in N days, "D-Day" when it is due today, and "D+N" when it is overdue by N days. N is the number of days you would count on a calendar between `today` and `dueDate` (2026-01-15 to 2026-02-15 is 31 days), so it stays correct across month ends, year ends and leap days.
+**Intent**: Build the D-day label shown next to a task in the list. A completed task shows "CLEAR" whether or not it has a due date, an active task without a due date shows nothing, and an active task with a due date shows "D-N" when it is due in N days, "D-Day" when it is due today, and "D+N" when it is overdue by N days. N is the number of days you would count on a calendar between `today` and `dueDate` (2026-01-15 to 2026-02-15 is 31 days), so it stays correct across month ends, year ends and leap days. The result is exactly one of "CLEAR", "", "D-Day", "D-N" or "D+N", with N written as a plain decimal number (no leading zeros, padding or spaces), so every Tip below compares the whole string.
 
 **Pre-conditions**
 - `today` is the user's current local date. The caller passes it in, so the function never reads the clock.
 - `dueDate` is either `null` (the task has no due date) or any valid `LocalDate`, in the past, today, or in the future.
 
 **Post-conditions**
-- Label format (applies to every case below): the result is exactly one of "CLEAR", "", "D-Day", "D-N" or "D+N", where N is a positive decimal integer with no leading zeros, no padding and no spaces; "D" and "CLEAR" are upper case and "Day" is capitalized as written. `[Unit]`
-  - Tested by every test in `DueDateUtilsTest`: each one compares the whole returned string with `assertEquals`, so any extra character, padding or case change fails.
 - Success cases
   - A completed task with a due date in the future returns "CLEAR". `[Unit]`
     - Tip: Given dueDate = 2026-05-25, today = 2026-05-20, isCompleted = true / When dueDateLabel(dueDate, today, isCompleted) is called / Then it returns "CLEAR"
