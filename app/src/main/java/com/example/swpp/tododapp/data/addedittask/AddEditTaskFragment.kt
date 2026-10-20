@@ -15,6 +15,7 @@
  */
 package com.example.swpp.tododapp.addedittask
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,7 @@ import com.example.swpp.tododapp.tasks.ADD_EDIT_RESULT_OK
 import com.example.swpp.tododapp.util.setupRefreshLayout
 import com.example.swpp.tododapp.util.setupSnackbar
 import com.google.android.material.snackbar.Snackbar
+import java.time.LocalDate
 
 /**
  * Main UI for the add task screen. Users can enter a task title and description.
@@ -58,8 +60,23 @@ class AddEditTaskFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupSnackbar()
         setupNavigation()
+        setupDueDatePicker()
         this.setupRefreshLayout(viewDataBinding.refreshLayout)
         viewModel.start(args.taskId)
+    }
+
+    private fun setupDueDatePicker() {
+        viewDataBinding.addTaskDueDateText.setOnClickListener {
+            val initial = viewModel.dueDate.value ?: LocalDate.now()
+            // DatePicker months are 0-based (0 = January), LocalDate months are 1-based.
+            DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    viewModel.setDueDate(LocalDate.of(year, month + 1, dayOfMonth))
+                },
+                initial.year, initial.monthValue - 1, initial.dayOfMonth
+            ).show()
+        }
     }
 
     private fun setupSnackbar() {

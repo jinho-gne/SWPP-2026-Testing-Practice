@@ -18,6 +18,9 @@ package com.example.swpp.tododapp.data.source.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.swpp.tododapp.data.Task
 
 /**
@@ -25,8 +28,18 @@ import com.example.swpp.tododapp.data.Task
  *
  * Note that exportSchema should be true in production databases.
  */
-@Database(entities = [Task::class], version = 1, exportSchema = false)
+@Database(entities = [Task::class], version = 2, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class ToDoDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TasksDao
+
+    companion object {
+        // Version 2 adds the nullable due date column.
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE tasks ADD COLUMN due_date INTEGER")
+            }
+        }
+    }
 }

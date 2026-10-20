@@ -16,10 +16,12 @@
 package com.example.swpp.tododapp.tasks
 
 import android.graphics.Paint
+import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swpp.tododapp.data.Task
+import java.time.LocalDate
 
 
 
@@ -39,5 +41,14 @@ fun setStyle(textView: TextView, enabled: Boolean) {
         textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
     } else {
         textView.paintFlags = textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+    }
+}
+
+@BindingAdapter("app:dueDateLabel")
+fun setDueDateLabel(textView: TextView, task: Task?) {
+    val label = task?.let { dueDateLabel(it.dueDate, LocalDate.now(), it.isCompleted) }.orEmpty()
+    if (label.isNotEmpty()) {
+        textView.text = label
+        textView.visibility = View.VISIBLE
     }
 }

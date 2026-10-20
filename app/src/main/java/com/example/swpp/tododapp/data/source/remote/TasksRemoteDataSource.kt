@@ -95,7 +95,7 @@ object TasksRemoteDataSource : TasksDataSource {
     }
 
     override suspend fun completeTask(task: Task) {
-        val completedTask = Task(task.title, task.description, true, task.id)
+        val completedTask = task.copy(isCompleted = true)
         TASKS_SERVICE_DATA[task.id] = completedTask
     }
 
@@ -104,7 +104,7 @@ object TasksRemoteDataSource : TasksDataSource {
     }
 
     override suspend fun activateTask(task: Task) {
-        val activeTask = Task(task.title, task.description, false, task.id)
+        val activeTask = task.copy(isCompleted = false)
         TASKS_SERVICE_DATA[task.id] = activeTask
     }
 

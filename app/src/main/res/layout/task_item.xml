@@ -49,13 +49,24 @@
 
         <TextView
             android:id="@+id/title_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:text="@{task.titleForList}"
             app:completedTask="@{task.completed}" />
+
+        <TextView
+            android:id="@+id/due_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/list_item_padding"
+            android:layout_marginStart="@dimen/list_item_padding"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:dueDateLabel="@{task}" />
     </LinearLayout>
 </layout>

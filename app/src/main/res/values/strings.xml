@@ -29,6 +29,9 @@
     <string name="title_hint">Title</string>
     <string name="description_hint">Enter your task here.</string>
     <string name="empty_task_message">Tasks cannot be empty</string>
+    <string name="set_due_date">Set due date</string>
+    <string name="due_date_format">Due %1$s</string>
+    <string name="clear_due_date">Clear</string>
     <string name="successfully_saved_task_message">Task saved</string>
     <string name="list_title">Task List</string>
     <string name="statistics_title">Statistics</string>

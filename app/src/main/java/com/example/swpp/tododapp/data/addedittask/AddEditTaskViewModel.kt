@@ -24,6 +24,7 @@ import com.example.swpp.tododapp.TodoApplication
 import com.example.swpp.tododapp.data.Result.Success
 import com.example.swpp.tododapp.data.Task
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 /**
  * ViewModel for the Add/Edit screen.
@@ -37,6 +38,10 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
 
     // Two-way databinding, exposing MutableLiveData
     val description = MutableLiveData<String>()
+
+    // Selected due date, or null when the task has no due date
+    private val _dueDate = MutableLiveData<LocalDate?>()
+    val dueDate: LiveData<LocalDate?> = _dueDate
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
@@ -88,6 +93,7 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
     private fun onTaskLoaded(task: Task) {
         title.value = task.title
         description.value = task.description
+        _dueDate.value = task.dueDate
         taskCompleted = task.isCompleted
         _dataLoading.value = false
         isDataLoaded = true
@@ -95,6 +101,14 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun onDataNotAvailable() {
         _dataLoading.value = false
+    }
+
+    fun setDueDate(date: LocalDate) {
+        _dueDate.value = date
+    }
+
+    fun clearDueDate() {
+        _dueDate.value = null
     }
 
     // Called when clicking on fab.
@@ -113,9 +127,9 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
 
         val currentTaskId = taskId
         if (isNewTask || currentTaskId == null) {
-            createTask(Task(currentTitle, currentDescription))
+            createTask(Task(currentTitle, currentDescription, dueDate = _dueDate.value))
         } else {
-            val task = Task(currentTitle, currentDescription, taskCompleted, currentTaskId)
+            val task = Task(currentTitle, currentDescription, taskCompleted, currentTaskId, _dueDate.value)
             updateTask(task)
         }
     }

@@ -37,6 +37,8 @@ android {
     }
 
     compileOptions {
+        // java.time (LocalDate) needs desugaring below API 26
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -75,6 +77,8 @@ dependencies {
 
     // timber
     implementation("com.jakewharton.timber:timber:5.0.1")
+    // java.time support for minSdk 24
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
 
     // Testing

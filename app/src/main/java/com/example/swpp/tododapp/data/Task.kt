@@ -18,6 +18,7 @@ package com.example.swpp.tododapp.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDate
 import java.util.UUID
 
 /**
@@ -28,13 +29,15 @@ import java.util.UUID
  * @param description description of the task
  * @param isCompleted whether or not this task is completed
  * @param id          id of the task
+ * @param dueDate     due date of the task, or null if it has none
  */
 @Entity(tableName = "tasks")
 data class Task @JvmOverloads constructor(
     @ColumnInfo(name = "title") var title: String = "",
     @ColumnInfo(name = "description") var description: String = "",
     @ColumnInfo(name = "completed") var isCompleted: Boolean = false,
-    @PrimaryKey @ColumnInfo(name = "entryid") var id: String = UUID.randomUUID().toString()
+    @PrimaryKey @ColumnInfo(name = "entryid") var id: String = UUID.randomUUID().toString(),
+    @ColumnInfo(name = "due_date") var dueDate: LocalDate? = null
 ) {
 
     val titleForList: String
